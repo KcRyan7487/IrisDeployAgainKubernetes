@@ -1,24 +1,33 @@
 from flask import Flask, render_template, request
+import os
 import numpy as np
-# import pickle
 import joblib
+
 app = Flask(__name__)
 filename = 'file_iris1.pkl'
-# model = pickle.load(open(filename, 'rb'))
 model = joblib.load(filename)
-# model = joblib.load(filename)
+
+
 @app.route('/')
-def index(): 
+def index():
     return render_template('index.html')
+
+
+@app.route('/health')
+def health():
+    return {'status': 'ok'}, 200
+
+
 @app.route('/predict', methods=['POST'])
 def predict():
-    Sepal_Length = request.form['sepal_length']
-    Sepal_Width = request.form['sepal_width']
-    Peta1_Length = request.form['petal_length']
-    Petal_Width = request.form['petal_width']      
-    pred = model.predict(np.array([[Sepal_Length, Sepal_Width, Peta1_Length, Petal_Width]]))
-    print(pred)
-    return render_template('index.html', predict=str(pred))
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    sepal_length = float(request.form['sepal_length'])
+    sepal_width = float(request.form['sepal_width'])
+    petal_length = float(request.form['petal_length'])
+    petal_width = float(request.form['petal_width'])
 
+    pred = model.predict(np.array([[sepal_length, sepal_width, petal_length, petal_width]]))
+    return render_template('index.html', predict=str(pred))
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', '5000')), debug=False)

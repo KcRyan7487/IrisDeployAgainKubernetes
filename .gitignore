@@ -1,0 +1,15 @@
+# Ignore virtual envs and caches
+.venv/
+venv/
+vir/
+__pycache__/
+*.py[cod]
+
+# Ignore local tooling binaries and installers
+minikube-linux-amd64
+*.msi
+*.exe
+*.deb
+
+# Ignore local Kubernetes output or temp files
+*.log
